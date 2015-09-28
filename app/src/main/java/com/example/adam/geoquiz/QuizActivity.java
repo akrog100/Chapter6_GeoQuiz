@@ -1,7 +1,10 @@
 package com.example.adam.geoquiz;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +20,11 @@ public class QuizActivity extends AppCompatActivity {
     private Button mFalseButton;
     private ImageButton mNextButton;
     private ImageButton mPrevButton;
+    private Button mCheatButton;
     private TextView mQuestionTextView;
+    private static String KEY_INDEX = "index";
+    //2
+    private static final int REQUEST_CODE_CHEAT = 0;
 
     private void updateQuestion(){
         int question = mQuestionBank[mCurrentIndex].getTextResId();
@@ -27,13 +34,15 @@ public class QuizActivity extends AppCompatActivity {
     private void checkAnswer(boolean UserPressedTrue){
         boolean AnswerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
         int messageRedId = 0;
-        if(UserPressedTrue == AnswerIsTrue) {
-            messageRedId = R.string.correct_toast;
+        if(mIsCheater){
+            messageRedId = R.string.judgement_toast;
+        }else {
+            if (UserPressedTrue == AnswerIsTrue) {
+                messageRedId = R.string.correct_toast;
+            } else {
+                messageRedId = R.string.incorrect_toast;
+            }
         }
-        else{
-            messageRedId = R.string.incorrect_toast;
-        }
-
         Toast.makeText(this,messageRedId,Toast.LENGTH_SHORT ).show();
 
     }
@@ -46,7 +55,8 @@ public class QuizActivity extends AppCompatActivity {
             new Question(R.string.stomach_question, false)
     };
 
-    private int mCurrentIndex;
+    private int mCurrentIndex = 0;
+    private boolean mIsCheater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +84,7 @@ public class QuizActivity extends AppCompatActivity {
         mQuestionTextView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCurrentIndex = (mCurrentIndex+1)%mQuestionBank.length;
+                mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
                 updateQuestion();
             }
         });
@@ -84,6 +94,7 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex+1)%mQuestionBank.length;
+                mIsCheater = false;
                 updateQuestion();
             }
         });
@@ -98,11 +109,50 @@ public class QuizActivity extends AppCompatActivity {
                 else{
                     mCurrentIndex = mQuestionBank.length-1;
                 }
+                mIsCheater = false;
                 updateQuestion();
             }
         });
 
+        mCheatButton = (Button)findViewById(R.id.cheat_button);
+        mCheatButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Start Cheating
+                boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
+                Intent i = CheatActivity.newIntent(QuizActivity.this,answerIsTrue);
+                startActivityForResult(i,REQUEST_CODE_CHEAT);
+            }
+        });
+
+        if(savedInstanceState!=null){
+            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX,0);
+            //1
+        }
+
         updateQuestion();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(resultCode != Activity.RESULT_OK){
+            return;
+        }
+        if(requestCode == REQUEST_CODE_CHEAT){
+            if(data == null){
+                return;
+            }
+            mIsCheater = CheatActivity.wasAnswerShown(data);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt(KEY_INDEX,mCurrentIndex);
+        //3
+
     }
 
     @Override
