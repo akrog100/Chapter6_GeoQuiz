@@ -23,7 +23,7 @@ public class QuizActivity extends AppCompatActivity {
     private Button mCheatButton;
     private TextView mQuestionTextView;
     private static String KEY_INDEX = "index";
-    //2
+    private static String KEY_CHEATER = "indexes";
     private static final int REQUEST_CODE_CHEAT = 0;
 
     private void updateQuestion(){
@@ -127,7 +127,7 @@ public class QuizActivity extends AppCompatActivity {
 
         if(savedInstanceState!=null){
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX,0);
-            //1
+            mIsCheater = savedInstanceState.getBoolean(KEY_CHEATER, false);
         }
 
         updateQuestion();
@@ -147,11 +147,12 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState){
+    public void onSaveInstanceState(Bundle savedInstanceState) {
 
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt(KEY_INDEX,mCurrentIndex);
-        //3
+        savedInstanceState.putBoolean(KEY_CHEATER, mIsCheater);
+        
 
     }
 
