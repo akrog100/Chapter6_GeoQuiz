@@ -24,6 +24,7 @@ public class QuizActivity extends AppCompatActivity {
     private TextView mQuestionTextView;
     private static String KEY_INDEX = "index";
     private static String KEY_CHEATER = "indexes";
+    private static String KEY_ARRAY = "indexs";
     private static final int REQUEST_CODE_CHEAT = 0;
 
     private void updateQuestion(){
@@ -34,7 +35,7 @@ public class QuizActivity extends AppCompatActivity {
     private void checkAnswer(boolean UserPressedTrue){
         boolean AnswerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
         int messageRedId = 0;
-        if(mQuestionBank[mCurrentIndex].isCheater()){
+        if(mBoolBank[mCurrentIndex]){
             messageRedId = R.string.judgement_toast;
         }else {
             if (UserPressedTrue == AnswerIsTrue) {
@@ -48,11 +49,15 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private Question[] mQuestionBank = new Question[]{
-            new Question(R.string.blood_question, false, false),
-            new Question(R.string.bones_question, false, false),
-            new Question(R.string.brain_question, true, false),
-            new Question(R.string.eyes_question, true, false),
-            new Question(R.string.stomach_question, false, false)
+            new Question(R.string.blood_question, false),
+            new Question(R.string.bones_question, false),
+            new Question(R.string.brain_question, true),
+            new Question(R.string.eyes_question, true),
+            new Question(R.string.stomach_question, false)
+    };
+
+    private boolean[] mBoolBank = new boolean[]{
+            false,false,false,false,false
     };
 
     private int mCurrentIndex = 0;
@@ -128,6 +133,7 @@ public class QuizActivity extends AppCompatActivity {
         if(savedInstanceState!=null){
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX,0);
             mIsCheater = savedInstanceState.getBoolean(KEY_CHEATER, false);
+            mBoolBank = savedInstanceState.getBooleanArray(KEY_ARRAY);
         }
 
         updateQuestion();
@@ -143,7 +149,7 @@ public class QuizActivity extends AppCompatActivity {
                 return;
             }
             mIsCheater = CheatActivity.wasAnswerShown(data);
-            mQuestionBank[mCurrentIndex].setUserCheat(mIsCheater);
+            mBoolBank[mCurrentIndex] = true;
         }
     }
 
@@ -153,6 +159,7 @@ public class QuizActivity extends AppCompatActivity {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt(KEY_INDEX,mCurrentIndex);
         savedInstanceState.putBoolean(KEY_CHEATER, mIsCheater);
+        savedInstanceState.putBooleanArray(KEY_ARRAY, mBoolBank);
         //challenge 2 solution section
 
     }
