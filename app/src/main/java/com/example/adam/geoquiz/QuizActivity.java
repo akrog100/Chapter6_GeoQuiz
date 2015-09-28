@@ -34,7 +34,7 @@ public class QuizActivity extends AppCompatActivity {
     private void checkAnswer(boolean UserPressedTrue){
         boolean AnswerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
         int messageRedId = 0;
-        if(mIsCheater){
+        if(mQuestionBank[mCurrentIndex].isCheater()){
             messageRedId = R.string.judgement_toast;
         }else {
             if (UserPressedTrue == AnswerIsTrue) {
@@ -48,11 +48,11 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private Question[] mQuestionBank = new Question[]{
-            new Question(R.string.blood_question, false),
-            new Question(R.string.bones_question, false),
-            new Question(R.string.brain_question, true),
-            new Question(R.string.eyes_question, true),
-            new Question(R.string.stomach_question, false)
+            new Question(R.string.blood_question, false, false),
+            new Question(R.string.bones_question, false, false),
+            new Question(R.string.brain_question, true, false),
+            new Question(R.string.eyes_question, true, false),
+            new Question(R.string.stomach_question, false, false)
     };
 
     private int mCurrentIndex = 0;
@@ -143,6 +143,7 @@ public class QuizActivity extends AppCompatActivity {
                 return;
             }
             mIsCheater = CheatActivity.wasAnswerShown(data);
+            mQuestionBank[mCurrentIndex].setUserCheat(mIsCheater);
         }
     }
 
