@@ -152,7 +152,7 @@ public class QuizActivity extends AppCompatActivity {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt(KEY_INDEX,mCurrentIndex);
         savedInstanceState.putBoolean(KEY_CHEATER, mIsCheater);
-        
+        //challenge 2 solution section
 
     }
 
