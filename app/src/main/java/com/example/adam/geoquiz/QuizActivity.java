@@ -2,6 +2,7 @@ package com.example.adam.geoquiz;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,7 @@ public class QuizActivity extends AppCompatActivity {
     private ImageButton mPrevButton;
     private Button mCheatButton;
     private TextView mQuestionTextView;
+    private TextView mVersionTextView;
     private static String KEY_INDEX = "index";
     private static String KEY_CHEATER = "indexes";
     private static String KEY_ARRAY = "indexs";
@@ -31,6 +33,7 @@ public class QuizActivity extends AppCompatActivity {
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
     }
+
 
     private void checkAnswer(boolean UserPressedTrue){
         boolean AnswerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
@@ -68,6 +71,8 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
+
+
         mTrueButton = (Button)findViewById(R.id.true_button);
         mTrueButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -82,6 +87,10 @@ public class QuizActivity extends AppCompatActivity {
                checkAnswer(false);
             }
         });
+
+        mVersionTextView= (TextView)findViewById(R.id.version_text_view);
+        String version = Build.VERSION.RELEASE;
+        mVersionTextView.setText("API"+version);
 
         mQuestionTextView = (TextView)findViewById(R.id.question_text_view);
         int question = mQuestionBank[mCurrentIndex].getTextResId();

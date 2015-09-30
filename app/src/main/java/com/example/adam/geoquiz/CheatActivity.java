@@ -2,6 +2,7 @@ package com.example.adam.geoquiz;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,8 +17,11 @@ public class CheatActivity extends AppCompatActivity {
     private static final String EXTRA_ANSWER_IS_TRUE = "com.example.adam.GeoQuiz.answer_is_true";
     private static final String EXTRA_ANSWER_IS_SHOWN = "com.example.adam.GeoQuiz.answer_is_shown";
     private boolean mAnswerIsTrue;
-    //1
+    private boolean mCheater;
+    private static String KEY_CHEATED = "index";
 
+
+    private TextView mVersionTextView;
     private TextView mAnswerTextView;
     private Button mShowAnswer;
 
@@ -42,32 +46,47 @@ public class CheatActivity extends AppCompatActivity {
         mAnswerIsTrue = getIntent().getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false);
         mAnswerTextView =  (TextView)findViewById(R.id.answerTextView);
 
+        mVersionTextView= (TextView)findViewById(R.id.version_text_view);
+        String version = Build.VERSION.RELEASE;
+        mVersionTextView.setText("API"+version);
+
         mShowAnswer = (Button)findViewById(R.id.showAnswerButton);
         mShowAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mAnswerIsTrue) {
+                if (mAnswerIsTrue) {
                     mAnswerTextView.setText(R.string.true_button);
-                }else{
+                } else {
                     mAnswerTextView.setText(R.string.false_button);
                 }
-                //2
-                setAnswerShownResult(true);
+                mCheater = true;
+                setAnswerShownResult(mCheater);
 
             }
         });
 
-        //3
+        if(savedInstanceState!=null){
+            mCheater = savedInstanceState.getBoolean(KEY_CHEATED, false);
+            setAnswerShownResult(mCheater);
+        }
+
     }
 
-    private void setAnswerShownResult(boolean isAnswerShown){
+    private void setAnswerShownResult(boolean isAnswerShown) {
         Intent data = new Intent();
         data.putExtra(EXTRA_ANSWER_IS_SHOWN, isAnswerShown);
         setResult(RESULT_OK, data);
 
     }
 
-    //4
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putBoolean(KEY_CHEATED, mCheater);
+
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

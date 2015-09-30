@@ -13,4 +13,12 @@
     <string name="brain_question">There is a part of the neurons in your brain called a synapse.</string>
     <string name="stomach_question">Stomach acid is chemically composed of the same compounds in deodorant.</string>
     <string name="eyes_question">When the fluid in the human eye does not drain properly, creating extra pressure, a condition known as Ocular Hypertension manifests.</string>
+    <string name="warning_text">Are you sure you want to do this?</string>
+    <string name="show_answer_button">Show Answer</string>
+    <string name="cheat_button">Cheat!</string>
+    <string name="judgement_toast">Cheating is wrong.</string>
+    <string name="title_activity_cheat_acitivty">Cheat</string>
+
+    <string name="hello_world">Hello world!</string>
+
 </resources>
